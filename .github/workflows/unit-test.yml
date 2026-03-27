@@ -70,7 +70,7 @@ jobs:
           - project: AWSAuthSDK/AWSAuthSDK.xcodeproj
             scheme: AWSMobileClient
 
-    runs-on: macos-13
+    runs-on: macos-15
 
     steps:
       - uses: actions/checkout@c85c95e3d7251135ab7dc9ce3241c5835cc595a9 # v3.5.3
@@ -81,8 +81,9 @@ jobs:
         run: |
           xcodebuild test -project "${{ matrix.project }}" \
           -scheme ${{ matrix.scheme }} \
-          -destination "platform=iOS Simulator,name=iPhone 14,OS=latest" \
+          -destination "platform=iOS Simulator,name=iPhone 16 Pro,arch=x86_64,OS=latest" \
           -sdk iphonesimulator \
+          -parallel-testing-enabled NO \
           -only-testing:"${{ matrix.scheme }}UnitTests" | xcpretty --simple --color --report junit && exit ${PIPESTATUS[0]}
 
       - name: Additional AWSCore unit test
@@ -90,7 +91,8 @@ jobs:
         run: |
           xcodebuild test -project "${{ matrix.project }}" \
           -scheme ${{ matrix.scheme }} \
-          -destination "platform=iOS Simulator,name=iPhone 14,OS=latest" \
+          -destination "platform=iOS Simulator,name=iPhone 16 Pro,arch=x86_64,OS=latest" \
           -sdk iphonesimulator \
+          -parallel-testing-enabled NO \
           -only-testing:AWSCoreServiceConfigurationTest \
           -only-testing:AWSCoreConfigurationTest | xcpretty --simple --color --report junit && exit ${PIPESTATUS[0]}
